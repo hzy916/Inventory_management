@@ -35,9 +35,14 @@
 
 <?php require "layouts/header.php"; ?>
 
-<?php if (isset($_POST['submit']) && $statement) { 
+<script>
+    var mysuccess = 0;
+    <?php if (isset($_POST['submit']) && $statement) { 
+        print("mysuccess = 1;");
 
- } ?>
+    } ?>
+</script>
+
 
  <div class="content-wrapper">
     <div class="container-fluid">
@@ -98,6 +103,12 @@
   </div>
 </div>
 
+<script>
+if (mysuccess == 1) {
+    alert("New Item Added.");
+    // $('#createItemModal').modal('show');
+}
+</script>
 
 
 <?php require "layouts/footer.php"; ?>
