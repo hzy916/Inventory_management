@@ -4,8 +4,8 @@
  * users table.
  *
  */
-require "config.php";
-require "common.php";
+require 'inc/config.php';
+require 'inc/common.php';
 if (isset($_POST['submit'])) {
 
   try {
@@ -54,27 +54,41 @@ if (isset($_GET['id'])) {
 }
 ?>
 
-<?php require "templates/header.php"; ?>
+<?php require "layouts/header.php"; ?>
 
 <?php if (isset($_POST['submit']) && $statement) : ?>
 	<blockquote><?php echo escape($_POST['itemname']); ?> successfully updated.</blockquote>
 <?php endif; ?>
 
-<h2>Edit a user</h2>
 
-<form method="post">
-    <?php foreach ($user as $key => $value) : ?>
-      <label for="<?php echo $key; ?>"><?php echo ucfirst($key); ?></label>
-      <input type="text" name="<?php echo $key; ?>" id="<?php echo $key; ?>" value="<?php echo escape($value); ?>"
-        <?php echo ($key === 'id' ? 'readonly' : null);
-        echo ($key === 'itemname' ? 'readonly' : null);
-        echo ($key === 'color' ? 'readonly' : null);
-        echo ($key === 'size' ? 'readonly' : null);
-        ?>>
-    <?php endforeach; ?>
-    <input type="submit" name="submit" value="Submit">
-</form>
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="#">Dashboard</a>
+          </li>
+          <li class="breadcrumb-item active">Edit Inventory</li>
+        </ol>
 
-<a href="index.php">Back to home</a>
+        <h2>Edit Inventory for Item </h2>
 
-<?php require "templates/footer.php"; ?>
+        <form method="post">
+            <?php foreach ($user as $key => $value) : ?>
+              <label for="<?php echo $key; ?>"><?php echo ucfirst($key); ?></label>
+              <input type="text" name="<?php echo $key; ?>" id="<?php echo $key; ?>" value="<?php echo escape($value); ?>"
+                <?php echo ($key === 'id' ? 'readonly' : null);
+                echo ($key === 'itemname' ? 'readonly' : null);
+                echo ($key === 'color' ? 'readonly' : null);
+                echo ($key === 'size' ? 'readonly' : null);
+                ?>>
+            <?php endforeach; ?>
+            <input type="submit" name="submit" value="Submit">
+        </form>
+    </div>
+    
+		<!-- /.container-fluid -->
+		</div>
+	 <!-- /.content-wrapper -->
+
+<?php require "layouts/footer.php"; ?>

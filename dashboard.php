@@ -1,16 +1,10 @@
 <?php
-	session_start();
 
-	if(!isset($_SESSION['id'],$_SESSION['user_role_id']))
-	{
-		header('location:index.php?lmsg=true');
-		exit;
-	}
 
 	require_once('inc/config.php');
 	require_once('inc/common.php');
 	require_once('layouts/header.php');
-	require_once('layouts/left_sidebar.php');
+	// require_once('layouts/left_sidebar.php');
 ?>
 
 <?php
@@ -73,7 +67,7 @@ try {
 										<th>Size</th>
 										<th>Amount</th>
 										<th>Date</th>
-										<th>Edit</th>
+										<th>Operation</th>
 									</tr>
 								</thead>
 
@@ -86,7 +80,7 @@ try {
 											<td><?php echo escape($row["size"]); ?></td>
 											<td><?php echo escape($row["amount"]); ?></td>
 											<td><?php echo escape($row["date"]); ?> </td>
-										  <td><a href="update-single.php?id=<?php echo escape($row["id"]); ?>">Edit</a></td>
+										  <td><a class="btn btn-danger" href="delete.php?id=<?php echo escape($row["id"]); ?>">Delete</a></td>
 										</tr>
 									<?php } ?>
 								</tbody>
@@ -97,8 +91,10 @@ try {
 							<?php }
 ?>
             </div>
+						<input class="btn btn-primary" type="button" value="Add an Item" onclick="window.location.href='add.php'" />
+
           </div>
-          <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+          <div class="card-footer small text-muted">Updated yesterday at ...</div>
         </div>
 		<!-- /.container-fluid -->
 		</div>

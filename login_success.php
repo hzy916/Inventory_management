@@ -1,0 +1,13 @@
+<?php  
+ //login_success.php  
+ session_start();  
+ if(!isset($_SESSION['id'],$_SESSION['user_role_id']))
+ {  
+    header('location:dashboard.php');
+    exit;
+ }  
+ else  
+ {  
+      header("location:login.php");  
+ }  
+ ?>  

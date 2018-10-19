@@ -5,50 +5,104 @@ require_once('inc/config.php');
 
 if(isset($_POST['login']))
 {
-	if(!empty($_POST['email']) && !empty($_POST['password']))
-	{
-		$email 		= trim($_POST['email']);
-		$password 	= trim($_POST['password']);
-		$md5Password = md5($password);
 
-		$sql = "select * from tbl_users where email = '".$email."' and password = '".$md5Password."'";
-    
-    // $results = mysqli_query($connection,$sql);
-    $statement = $connection->query($sql)
-
-		// $getNumRows = mysqli_num_rows($results);
-
-    $results = $statement->fetch(PDO::FETCH_ASSOC);
+    //Retrieve the field values from our login form.
+    $useremail = !empty($_POST['useremail']) ? trim($_POST['useremail']) : null;
+    $passwordAttempt = !empty($_POST['password']) ? trim($_POST['password']) : null;
 
 
-		if($results == 1)
-		{
-			$getUserRow = mysqli_fetch_assoc($results);
-			unset($getUserRow['password']);
+    if(empty($_POST["useremail"]) || empty($_POST["password"]))  
+    {  
+      $errorMsg = "All fields are required"; 
+    }  
+    else  
+    {  
+        //Retrieve the user account information for the given username.
+        $sql = "SELECT * FROM tbl_users WHERE email = :useremail AND password = :password";  
+        
+        $stmt = $connection->prepare($sql);
 
-			$_SESSION = $getUserRow;
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        unset($result['password']);
+        //Execute.
+        $stmt->execute(
+          array(  
+            'useremail'     =>     $_POST["useremail"],  
+            'password'     =>     $_POST["password"]  
+          )  
+        );
+        
+        //Fetch row.
+        $count = $stmt->rowCount();  
 
-			header('location:dashboard.php');
-			exit;
-		}
-		else
-		{
-			$errorMsg = "Wrong email or password";
-		}
-	}
+        if($count > 0)  
+        {  
+            $_SESSION = $result;
+             header("location:login_success.php");  
+        }  
+        else  
+        {  
+          $errorMsg = "Wrong email or password";
+        } 
+      }
+      //If $row is FALSE.
+      // if($user === false){
+      //   //Could not find a user with that username!
+      //     $errorMsg = "No user found with this email";
+      //   } else{
+      //     //User account found. Check to see if the given password matches the
+      //     //password hash that we stored in our users table.
+          
+      //     //Compare the passwords.
+      //     $validPassword = password_verify($passwordAttempt, $user['password']);
+          
+      //     //If $validPassword is TRUE, the login has been successful.
+      //     if($validPassword){
+              
+      //         //Provide the user with a login session.
+      //         $_SESSION['user_id'] = $user['id'];
+      //         $_SESSION['logged_in'] = time();
+              
+      //         //Redirect to our protected page, which we called home.php
+      //         header('Location: dashboard.php');
+      //         exit;
+              
+      //     } else{
+      //         //$validPassword was FALSE. Passwords do not match.
+      //         $errorMsg = "Wrong email or password";
+      //     }
+      //   }
+      // }
+  
+    // if($user == 1)
+		// {
+		// 	$getUserRow = mysqli_fetch_assoc($results);
+		// 	unset($getUserRow['password']);
+
+		// 	$_SESSION = $getUserRow;
+
+		// 	header('location:dashboard.php');
+		// 	exit;
+		// }
+		// else
+		// {
+		// 	$errorMsg = "Wrong email or password";
+		// }
+
 }
 
-if(isset($_GET['logout']) && $_GET['logout'] == true)
-{
-	session_destroy();
-	header("location:index.php");
-	exit;
-}
-
-if(isset($_GET['lmsg']) && $_GET['lmsg'] == true)
-{
-	$errorMsg = "Login required to access dashboard";
-}
+// if(isset($_GET['logout']) && $_GET['logout'] == true)
+// {
+// 	session_destroy();
+// 	header("location:login.php");
+// 	exit;
+// }
+ 
+ 
+// if(isset($_GET['lmsg']) && $_GET['lmsg'] == true)
+// {
+// 	$errorMsg = "Login required to access dashboard";
+// }
 
 ?>
 
@@ -87,7 +141,7 @@ if(isset($_GET['lmsg']) && $_GET['lmsg'] == true)
         <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
           <div class="form-group">
             <label for="exampleInputEmail1">Email address</label>
-            <input class="form-control" id="exampleInputEmail1" name="email" type="email" placeholder="Enter email" required>
+            <input class="form-control" id="useremail" name="useremail" type="email" placeholder="Enter email" required>
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1">Password</label>
